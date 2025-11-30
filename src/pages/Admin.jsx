@@ -451,122 +451,317 @@ const CategoryTab = ({ categories, formData, setFormData, editingItem, setEditin
                         </Button>
                     </div>
                 </form>
+            </div>
+        )}
+    </div>
+)
 
-// Offer Tab Component
-                const OfferTab = ({offers, products, formData, setFormData, editingItem, setEditingItem, handleSubmit, handleDelete}) => (
-                <div>
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-semibold">Angebots-Verwaltung</h2>
-                        <Button
-                            onClick={() => {
-                                setEditingItem(null)
-                                setFormData({
-                                    product_id: products[0]?.id || '',
-                                    new_price: '',
-                                    valid_until: ''
-                                })
-                            }}
-                        >
-                            + Neues Angebot
-                        </Button>
-                    </div>
+// Product Tab Component - Products organized by Category
+const ProductTab = ({ products, categories, formData, setFormData, editingItem, setEditingItem, handleSubmit, handleDelete }) => {
+    const [expandedCategories, setExpandedCategories] = useState(categories.map(c => c.id))
 
-                    {/* Offers List */}
-                    <div className="grid gap-4 mb-8">
-                        {offers.map((offer) => (
-                            <div key={offer.id} className="border rounded-lg p-4 flex justify-between items-center">
-                                <div>
-                                    <h3 className="font-semibold">{offer.title}</h3>
-                                    <p className="text-sm text-gray-600">{offer.description}</p>
-                                    <p className="text-sm mt-2">
-                                        <span className="font-bold text-primary">€{parseFloat(offer.price).toFixed(2)}</span>
-                                        <span className="ml-2 line-through text-gray-400">€{parseFloat(offer.old_price).toFixed(2)}</span>
-                                        <span className="ml-2 text-green-600">-{offer.discount_percent}%</span>
-                                        <span className="ml-2 text-gray-500">• Gültig bis {new Date(offer.valid_until).toLocaleDateString('de-DE')}</span>
-                                    </p>
+    const toggleCategory = (categoryId) => {
+        setExpandedCategories(prev =>
+            prev.includes(categoryId)
+                ? prev.filter(id => id !== categoryId)
+                : [...prev, categoryId]
+        )
+    }
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-semibold">Produkt-Verwaltung</h2>
+                <p className="text-gray-600">Produkte sind nach Kategorien organisiert</p>
+            </div>
+
+            {/* Products by Category */}
+            <div className="space-y-6 mb-8">
+                {categories.map((category) => {
+                    const categoryProducts = products.filter(p => p.category_id === category.id)
+                    const isExpanded = expandedCategories.includes(category.id)
+
+                    return (
+                        <div key={category.id} className="border rounded-lg overflow-hidden">
+                            {/* Category Header */}
+                            <div
+                                className="bg-gray-100 p-4 flex justify-between items-center cursor-pointer hover:bg-gray-200 transition-colors"
+                                onClick={() => toggleCategory(category.id)}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <span className="text-2xl">{category.icon}</span>
+                                    <div>
+                                        <h3 className="font-semibold text-lg">{category.name}</h3>
+                                        <p className="text-sm text-gray-600">
+                                            {categoryProducts.length} Produkt{categoryProducts.length !== 1 ? 'e' : ''}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="flex gap-2">
-                                    <button
-                                        onClick={() => {
-                                            setEditingItem(offer)
+                                <div className="flex items-center gap-2">
+                                    <Button
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            setEditingItem(null)
                                             setFormData({
-                                                id: offer.id,
-                                                product_id: offer.product_id,
-                                                new_price: offer.price,
-                                                valid_until: offer.valid_until
+                                                name: '',
+                                                description: '',
+                                                price: '',
+                                                image: '',
+                                                category_id: category.id,
+                                                in_stock: true
                                             })
                                         }}
-                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                     >
-                                        Bearbeiten
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete('offer', offer.id)}
-                                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                                    >
-                                        Löschen
-                                    </button>
+                                        + Produkt hinzufügen
+                                    </Button>
+                                    <span className="text-gray-500">
+                                        {isExpanded ? '▼' : '▶'}
+                                    </span>
                                 </div>
                             </div>
-                        ))}
-                    </div>
 
-                    {/* Offer Form */}
-                    {formData.product_id !== undefined && (
-                        <div className="bg-gray-50 rounded-lg p-6">
-                            <h3 className="text-xl font-semibold mb-4">
-                                {editingItem ? 'Angebot bearbeiten' : 'Neues Angebot erstellen'}
-                            </h3>
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <select
-                                    name="offer-product"
-                                    value={formData.product_id || ''}
-                                    onChange={(e) => setFormData({ ...formData, product_id: e.target.value })}
-                                    className="input-field"
-                                    required
-                                >
-                                    <option value="">Produkt wählen</option>
-                                    {products.map((product) => (
-                                        <option key={product.id} value={product.id}>
-                                            {product.name} (€{parseFloat(product.price).toFixed(2)})
-                                        </option>
-                                    ))}
-                                </select>
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    name="offer-new-price"
-                                    placeholder="Neuer reduzierter Preis (€)"
-                                    value={formData.new_price || ''}
-                                    onChange={(e) => setFormData({ ...formData, new_price: e.target.value })}
-                                    className="input-field"
-                                    required
-                                />
-                                <input
-                                    type="date"
-                                    name="offer-valid-until"
-                                    value={formData.valid_until || ''}
-                                    onChange={(e) => setFormData({ ...formData, valid_until: e.target.value })}
-                                    className="input-field"
-                                    required
-                                />
-                                <div className="flex gap-4">
-                                    <Button type="submit" variant="primary">Speichern</Button>
-                                    <Button
-                                        type="button"
-                                        variant="secondary"
-                                        onClick={() => {
-                                            setEditingItem(null)
-                                            setFormData({})
-                                        }}
-                                    >
-                                        Abbrechen
-                                    </Button>
+                            {/* Category Products */}
+                            {isExpanded && (
+                                <div className="p-4 space-y-3 bg-white">
+                                    {categoryProducts.length === 0 ? (
+                                        <p className="text-gray-500 text-center py-4">
+                                            Keine Produkte in dieser Kategorie
+                                        </p>
+                                    ) : (
+                                        categoryProducts.map((product) => (
+                                            <div key={product.id} className="border rounded-lg p-3 flex justify-between items-center bg-gray-50">
+                                                <div>
+                                                    <h4 className="font-semibold">{product.name}</h4>
+                                                    <p className="text-sm text-gray-600">{product.description}</p>
+                                                    <p className="text-sm mt-1">
+                                                        <span className="font-bold text-primary">€{parseFloat(product.price).toFixed(2)}</span>
+                                                        {!product.in_stock && <span className="ml-2 text-red-500">• Nicht verfügbar</span>}
+                                                    </p>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            setEditingItem(product)
+                                                            setFormData(product)
+                                                        }}
+                                                        className="px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600"
+                                                    >
+                                                        Bearbeiten
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete('product', product.id)}
+                                                        className="px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+                                                    >
+                                                        Löschen
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
-                            </form>
+                            )}
                         </div>
-                    )}
-                </div>
-                )
+                    )
+                })}
+            </div>
 
-                export default Admin
+            {/* Product Form */}
+            {formData.name !== undefined && (
+                <div className="bg-gray-50 rounded-lg p-6 border-2 border-primary">
+                    <h3 className="text-xl font-semibold mb-4">
+                        {editingItem ? 'Produkt bearbeiten' : 'Neues Produkt erstellen'}
+                    </h3>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <input
+                            type="text"
+                            name="product-name"
+                            placeholder="Name"
+                            value={formData.name || ''}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className="input-field"
+                            required
+                        />
+                        <textarea
+                            name="product-description"
+                            placeholder="Beschreibung"
+                            value={formData.description || ''}
+                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                            className="input-field"
+                            rows="3"
+                        />
+                        <input
+                            type="number"
+                            step="0.01"
+                            name="product-price"
+                            placeholder="Preis (€)"
+                            value={formData.price || ''}
+                            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                            className="input-field"
+                            required
+                        />
+                        <input
+                            type="url"
+                            name="product-image"
+                            placeholder="Bild-URL (optional)"
+                            value={formData.image || ''}
+                            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                            className="input-field"
+                        />
+                        <select
+                            name="product-category"
+                            value={formData.category_id || ''}
+                            onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                            className="input-field"
+                            required
+                        >
+                            <option value="">Kategorie wählen</option>
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                            ))}
+                        </select>
+                        <label className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                checked={formData.in_stock !== false}
+                                onChange={(e) => setFormData({ ...formData, in_stock: e.target.checked })}
+                            />
+                            <span>Auf Lager</span>
+                        </label>
+                        <div className="flex gap-4">
+                            <Button type="submit" variant="primary">Speichern</Button>
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => {
+                                    setEditingItem(null)
+                                    setFormData({})
+                                }}
+                            >
+                                Abbrechen
+                            </Button>
+                        </div>
+                    </form>
+                </div>
+            )}
+        </div>
+    )
+}
+
+// Offer Tab Component
+const OfferTab = ({ offers, products, formData, setFormData, editingItem, setEditingItem, handleSubmit, handleDelete }) => (
+    <div>
+        <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">Angebots-Verwaltung</h2>
+            <Button
+                onClick={() => {
+                    setEditingItem(null)
+                    setFormData({
+                        product_id: products[0]?.id || '',
+                        new_price: '',
+                        valid_until: ''
+                    })
+                }}
+            >
+                + Neues Angebot
+            </Button>
+        </div>
+
+        {/* Offers List */}
+        <div className="grid gap-4 mb-8">
+            {offers.map((offer) => (
+                <div key={offer.id} className="border rounded-lg p-4 flex justify-between items-center">
+                    <div>
+                        <h3 className="font-semibold">{offer.title}</h3>
+                        <p className="text-sm text-gray-600">{offer.description}</p>
+                        <p className="text-sm mt-2">
+                            <span className="font-bold text-primary">€{parseFloat(offer.price).toFixed(2)}</span>
+                            <span className="ml-2 line-through text-gray-400">€{parseFloat(offer.old_price).toFixed(2)}</span>
+                            <span className="ml-2 text-green-600">-{offer.discount_percent}%</span>
+                            <span className="ml-2 text-gray-500">• Gültig bis {new Date(offer.valid_until).toLocaleDateString('de-DE')}</span>
+                        </p>
+                    </div>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => {
+                                setEditingItem(offer)
+                                setFormData({
+                                    id: offer.id,
+                                    product_id: offer.product_id,
+                                    new_price: offer.price,
+                                    valid_until: offer.valid_until
+                                })
+                            }}
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                            Bearbeiten
+                        </button>
+                        <button
+                            onClick={() => handleDelete('offer', offer.id)}
+                            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                        >
+                            Löschen
+                        </button>
+                    </div>
+                </div>
+            ))}
+        </div>
+
+        {/* Offer Form */}
+        {formData.product_id !== undefined && (
+            <div className="bg-gray-50 rounded-lg p-6">
+                <h3 className="text-xl font-semibold mb-4">
+                    {editingItem ? 'Angebot bearbeiten' : 'Neues Angebot erstellen'}
+                </h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <select
+                        name="offer-product"
+                        value={formData.product_id || ''}
+                        onChange={(e) => setFormData({ ...formData, product_id: e.target.value })}
+                        className="input-field"
+                        required
+                    >
+                        <option value="">Produkt wählen</option>
+                        {products.map((product) => (
+                            <option key={product.id} value={product.id}>
+                                {product.name} (€{parseFloat(product.price).toFixed(2)})
+                            </option>
+                        ))}
+                    </select>
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="offer-new-price"
+                        placeholder="Neuer reduzierter Preis (€)"
+                        value={formData.new_price || ''}
+                        onChange={(e) => setFormData({ ...formData, new_price: e.target.value })}
+                        className="input-field"
+                        required
+                    />
+                    <input
+                        type="date"
+                        name="offer-valid-until"
+                        value={formData.valid_until || ''}
+                        onChange={(e) => setFormData({ ...formData, valid_until: e.target.value })}
+                        className="input-field"
+                        required
+                    />
+                    <div className="flex gap-4">
+                        <Button type="submit" variant="primary">Speichern</Button>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={() => {
+                                setEditingItem(null)
+                                setFormData({})
+                            }}
+                        >
+                            Abbrechen
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        )}
+    </div>
+)
+
+export default Admin
