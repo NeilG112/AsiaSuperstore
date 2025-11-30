@@ -4,10 +4,10 @@ backend:
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 collections:
-  - name: "categories_col"
+  - name: "categories_collection"
     label: "Kategorien"
     files:
-      - name: "categories"
+      - name: "categories_json_file"
         label: "Kategorien Liste"
         file: "src/data/categories.json"
         fields:
@@ -19,10 +19,10 @@ collections:
               { label: "Bild", name: "image", widget: "image", required: false },
               { label: "Icon", name: "icon", widget: "image", required: false }
             ] }
-  - name: "offers_col"
+  - name: "offers_collection"
     label: "Angebote"
     files:
-      - name: "offers"
+      - name: "offers_json_file"
         label: "Angebote Liste"
         file: "src/data/offers.json"
         fields:
