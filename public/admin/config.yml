@@ -1,0 +1,30 @@
+backend:
+  name: git-gateway
+  branch: main
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+collections:
+  - name: "categories"
+    label: "Kategorien"
+    label_singular: "Kategorie"
+    file: "data/categories.json"
+    fields:
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Name", name: "name", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string" }
+      - { label: "Kurzbeschreibung", name: "short_description", widget: "string" }
+      - { label: "Bild", name: "image", widget: "image" }
+      - { label: "Icon", name: "icon", widget: "image" }
+  - name: "offers"
+    label: "Angebote"
+    label_singular: "Angebot"
+    file: "data/offers.json"
+    fields:
+      - { label: "ID", name: "id", widget: "string" }
+      - { label: "Titel", name: "title", widget: "string" }
+      - { label: "Beschreibung", name: "description", widget: "string" }
+      - { label: "Preis", name: "price", widget: "number", value_type: "float" }
+      - { label: "Alter Preis", name: "old_price", widget: "number", value_type: "float", required: false }
+      - { label: "Gültig bis", name: "valid_until", widget: "datetime" }
+      - { label: "Bild", name: "image", widget: "image" }
+      - { label: "Kategorie", name: "category_id", widget: "string" }

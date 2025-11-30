@@ -6,10 +6,16 @@
     <title>Admin | Asian Superstore</title>
     <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.css" />
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
   </head>
   <body>
     <script>
-      // Optional: Custom CMS config or preview templates
+      window.CMS_MANUAL_INIT = true;
+      fetch('/admin/config.yml')
+        .then(r => r.text())
+        .then(config => {
+          window.CMS.init({ config: window.jsyaml.load(config) });
+        });
     </script>
   </body>
 </html>
