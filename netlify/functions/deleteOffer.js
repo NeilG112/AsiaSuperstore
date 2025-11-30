@@ -13,54 +13,26 @@ const pool = new Pool({
  */
 exports.handler = async (event, context) => {
     const headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'DELETE, OPTIONS'
-    }
 
-    if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers,
-            body: ''
-        }
-    }
-
-    if (!context.clientContext || !context.clientContext.user) {
-        return {
-            statusCode: 401,
-            headers,
-            body: JSON.stringify({ error: 'Unauthorized' })
-        }
-    }
-
-    try {
-        const { id } = event.queryStringParameters
-
-        const result = await pool.query(
-            'DELETE FROM offers WHERE id = $1 RETURNING *',
-            [id]
-        )
-
-        if (result.rows.length === 0) {
+        if(result.rows.length === 0) {
             return {
                 statusCode: 404,
                 headers,
                 body: JSON.stringify({ error: 'Offer not found' })
-            }
+}
         }
 
-        return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify({ message: 'Offer deleted successfully' })
-        }
+return {
+    statusCode: 200,
+    headers,
+    body: JSON.stringify({ message: 'Offer deleted successfully' })
+}
     } catch (error) {
-        console.error('Error deleting offer:', error)
-        return {
-            statusCode: 500,
-            headers,
-            body: JSON.stringify({ error: 'Failed to delete offer' })
-        }
+    console.error('Error deleting offer:', error)
+    return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Failed to delete offer' })
     }
+}
 }
