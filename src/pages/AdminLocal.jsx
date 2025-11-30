@@ -1,34 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SectionHeader from "../components/SectionHeader";
 import Button from "../components/Button";
+import AdminDashboard from "../admin/AdminDashboard";
 
 const AdminLocal = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [file, setFile] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [offers, setOffers] = useState([]);
+
+  useEffect(() => {
+    fetch("/src/data/categories.json")
+      .then((res) => res.json())
+      .then((data) => setCategories(data));
+    fetch("/src/data/offers.json")
+      .then((res) => res.json())
+      .then((data) => setOffers(data));
+  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Simple demo login, replace with real auth in production
-    setIsLoggedIn(true);
-  };
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleImport = () => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const json = JSON.parse(e.target.result);
-        alert("Import erfolgreich! (Demo)");
-        // Hier könnten Sie die Daten im State speichern oder an ein Backend senden
-      } catch {
-        alert("Ungültige JSON-Datei.");
-      }
-    };
-    reader.readAsText(file);
+    // Demo: Passwort ist "admin"
+    const pw = e.target.elements.password.value;
+    if (pw === "admin") setIsLoggedIn(true);
+    else alert("Falsches Passwort");
   };
 
   const handleExport = (data, filename) => {
@@ -41,12 +35,17 @@ const AdminLocal = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleImport = (json) => {
+    if (json.categories) setCategories(json.categories);
+    if (json.offers) setOffers(json.offers);
+  };
+
   if (!isLoggedIn) {
     return (
       <div className="container mx-auto px-4 py-8">
         <SectionHeader title="Admin-Login" />
         <form onSubmit={handleLogin} className="max-w-sm mx-auto bg-white rounded shadow p-6 flex flex-col gap-4">
-          <input type="password" placeholder="Passwort" className="border rounded px-3 py-2" required />
+          <input name="password" type="password" placeholder="Passwort" className="border rounded px-3 py-2" required />
           <Button type="submit">Login</Button>
         </form>
       </div>
@@ -55,18 +54,12 @@ const AdminLocal = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <SectionHeader title="Admin-Panel (Lokal)" />
-      <div className="bg-white rounded shadow p-6 max-w-xl mx-auto flex flex-col gap-4">
-        <div>
-          <label className="block mb-2 font-semibold">JSON Import</label>
-          <input type="file" accept="application/json" onChange={handleFileChange} />
-          <Button className="mt-2" onClick={handleImport}>Importieren</Button>
-        </div>
-        <div>
-          <label className="block mb-2 font-semibold">JSON Export</label>
-          <Button onClick={() => handleExport({}, "export.json")}>Exportieren (Demo)</Button>
-        </div>
-      </div>
+      <AdminDashboard
+        categories={categories}
+        offers={offers}
+        onExport={handleExport}
+        onImport={handleImport}
+      />
     </div>
   );
 };
