@@ -7,24 +7,28 @@ collections:
   - name: "categories"
     label: "Kategorien"
     label_singular: "Kategorie"
-    file: "data/categories.json"
+    file: "src/data/categories.json"
     fields:
-      - { label: "ID", name: "id", widget: "string" }
-      - { label: "Name", name: "name", widget: "string" }
-      - { label: "Slug", name: "slug", widget: "string" }
-      - { label: "Kurzbeschreibung", name: "short_description", widget: "string" }
-      - { label: "Bild", name: "image", widget: "image" }
-      - { label: "Icon", name: "icon", widget: "image" }
+      - { label: "Kategorien", name: "categories", widget: "list", fields: [
+          { label: "ID", name: "id", widget: "string" },
+          { label: "Name", name: "name", widget: "string" },
+          { label: "Slug", name: "slug", widget: "string", required: false },
+          { label: "Kurzbeschreibung", name: "short_description", widget: "string", required: false },
+          { label: "Bild", name: "image", widget: "image", required: false },
+          { label: "Icon", name: "icon", widget: "image", required: false }
+        ] }
   - name: "offers"
     label: "Angebote"
     label_singular: "Angebot"
-    file: "data/offers.json"
+    file: "src/data/offers.json"
     fields:
-      - { label: "ID", name: "id", widget: "string" }
-      - { label: "Titel", name: "title", widget: "string" }
-      - { label: "Beschreibung", name: "description", widget: "string" }
-      - { label: "Preis", name: "price", widget: "number", value_type: "float" }
-      - { label: "Alter Preis", name: "old_price", widget: "number", value_type: "float", required: false }
-      - { label: "Gültig bis", name: "valid_until", widget: "datetime" }
-      - { label: "Bild", name: "image", widget: "image" }
-      - { label: "Kategorie", name: "category_id", widget: "string" }
+      - { label: "Angebote", name: "offers", widget: "list", fields: [
+          { label: "ID", name: "id", widget: "string" },
+          { label: "Titel", name: "title", widget: "string" },
+          { label: "Beschreibung", name: "description", widget: "string" },
+          { label: "Preis", name: "price", widget: "string" },
+          { label: "Alter Preis", name: "old_price", widget: "string", required: false },
+          { label: "Gültig bis", name: "validUntil", widget: "datetime" },
+          { label: "Bild", name: "image", widget: "image", required: false },
+          { label: "Kategorie", name: "category_id", widget: "string", required: false }
+        ] }
