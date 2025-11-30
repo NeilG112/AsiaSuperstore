@@ -1,0 +1,19 @@
+backend:
+  name: git-gateway
+  branch: main
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+collections:
+  - name: "settings"
+    label: "Globale Einstellungen"
+    files:
+      - file: "src/data/categories.json"
+        label: "Kategorien"
+        name: "categories"
+        fields:
+          - { label: "Kategorien", name: "categories", widget: "list", fields: [ {label: "Name", name: "name", widget: "string"}, {label: "Bild", name: "image", widget: "image"} ] }
+      - file: "src/data/offers.json"
+        label: "Angebote"
+        name: "offers"
+        fields:
+          - { label: "Angebote", name: "offers", widget: "list", fields: [ {label: "Titel", name: "title", widget: "string"}, {label: "Beschreibung", name: "description", widget: "string"}, {label: "Preis", name: "price", widget: "string"}, {label: "Bild", name: "image", widget: "image"}, {label: "Gültig bis", name: "validUntil", widget: "datetime"} ] }

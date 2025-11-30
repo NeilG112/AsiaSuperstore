@@ -1,0 +1,275 @@
+# Projekt-Spezifikation — Asian Superstore Website (vollständig & ausführlich)
+
+## Kurzbeschreibung
+Erstelle eine moderne, responsive und elegante Informations-Website für den Supermarkt **„Asian Superstore“**.  
+Ziel: ansprechende Präsentation der Marke, Produktkategorien, wöchentliche Angebote und Filialen – plus ein einfaches Admin-System, mit dem der Ladenbesitzer Änderungen global und dauerhaft durchführen kann.
+
+Wichtig: Die Seite ist **kein Onlineshop**. Sie soll auf **Netlify** oder **GitHub Pages** deploybar sein. Änderungen durch das Admin-Panel müssen **global** gespeichert werden — wir nutzen dafür **Netlify CMS**, das Änderungen direkt in das GitHub-Repository committet und die Seite automatisch neu deployed.
+
+Sprache: **Deutsch**. Ton: freundlich, professionell, frisch, multikulturell.  
+Slogan: **„Bringt die Welt zusammen.“**
+
+---
+
+## 1. Design & Branding (ausführlich)
+Ziel: Premium / frisch / organisch / Halal → nicht schwarz-weiß.
+
+### Farbpalette (Beispielwerte; Cursor/Designer kann leichte Varianten wählen)
+- Primärgrün (frisch): #2E8B57 (oder #27A96B)  
+- Sekundärgrün (Akzente): #8FD3A3  
+- Creme / Natur: #FFF8F0  
+- Warmes Beige: #E9DCC9  
+- Dunkles Anthrazit (Text): #222222  
+- Akzentfarbe (CTA / Highlights): #FFB64D (warmes Gold/Orange)
+
+> Hinweis: Verwende die Primärfarbe für Buttons/Links/Hero-Highlights, Sekundärfarbe für Hover/Badges, Creme/Beige als Hintergrundsektionen. Text standardmäßig in Anthrazit. Keine reine Schwarz-Weiß-Ästhetik.
+
+### Typografie
+- Überschriften: Poppins oder Inter (stark, modern)  
+- Fließtext: Inter oder system-fallback sans-serif  
+- Gewicht: H1 = 700, H2 = 600, Body = 400  
+- Zeilenhöhe großzügig für Lesbarkeit (1.4–1.6)
+
+### Bildsprache
+- Frisches Obst/Gemüse, asiatische Gewürze, Reis, Tees. Keine Fotos vom echten Laden nötig (Platzhalter/Stock-Bilder).
+- Icons für Kategorien (lineare Icons, rundes Icon-Frame).
+
+### UI-Elemente
+- Große Hero-Sektion (Slogan + CTA "Angebote ansehen")  
+- Category Cards (Bild/Icon + kurzer Text + Link)  
+- Offer Cards (Preis, kurzer Beschreibungstext, Badge „Angebot“)  
+- Saubere, minimale Navbar + Footer mit Kontaktinfos  
+- Responsive Grid für Produkte & Angebote
+
+---
+
+## 2. Seitenstruktur (Seiten & Inhalt)
+
+### / (Home)
+- Hero (Slogan, CTA)
+- Kurztext: Wer wir sind (1–2 Absätze)
+- Kategorien-Vorschau (4–6 Karten)
+- Wöchentliche Angebote (3–6 Items als Vorschau)
+- Standort-Preview (2 Standorte mit Mini-Karten)
+- Footer-CTA: „Besuche uns / Rufe an“
+
+### /ueber (Über Uns)
+- Geschichte/Philosophie (Kurz)
+- Fokus: Multikulturelle Auswahl, Halal, Frisch
+- Team / Bilder (optional)
+
+### /produkte (Produkte — Kategorienübersicht)
+- Grid mit Kategorien (Icon, Name, kurzer Text)
+- Jede Kategorie linkbar zu einer Filteransicht (optional)
+
+### /angebote (Wöchentliche Angebote)
+- Gitteransicht aller aktuellen Angebote
+- Angebote laden dynamisch aus `offers.json` (oder aus Git/GitHub via Netlify CMS)
+
+### /standorte (Standorte)
+- Zwei vollständige Adressen:
+  - Am Kronenhof 17, 73728 Esslingen
+  - Pliensaustraße 42, 73728 Esslingen
+- Telefonnummern
+- Öffnungszeiten (Platzhalter in Projekt; editierbar via CMS)
+- Google Maps Embed (optional, konfigurierbar)
+
+### /kontakt (Kontakt)
+- Telefonnummern
+- Platzhalter-E-Mail: info@asiansuperstore.de
+- Kontaktformular (statisch; optional Formspree oder netlify forms)
+
+### /admin (Admin-Panel — wird von Netlify CMS bereitgestellt)
+- Netlify CMS Interface zur Bearbeitung von Kategorien & Angeboten
+- Optional: ein einfacher Local-Admin als Fallback (siehe Abschnitt Fallback)
+
+---
+
+## 3. Daten & Content (Format & Speicherort)
+
+### Hauptdatenquellen
+- `data/categories.json` — Liste der Kategorien (id, name, slug, short_description, image, icon)
+- `data/offers.json` — Wöchentliche Angebote (id, title, description, price, old_price, valid_until, image, category_id)
+- `content/` — optionale Markdown/MDX-Dateien für Texte (z. B. Über Uns), wenn Netlify CMS so konfiguriert ist.
+
+**Wichtig:** Obwohl CMS die primäre Bearbeitungsoberfläche ist, sollen `categories.json` und `offers.json` auch im Repo existieren, damit Cursor lokale Platzhalter laden kann.
+
+---
+
+## 4. Admin & Global Storage — Netlify CMS (ausführlich)
+Netlify CMS wird als statisches Admin-Interface installiert. Änderungen werden per Git commit & push in dein GitHub-Repository geschrieben und Netlify deployed automatisch die Seite.
+
+### Vorteile
+- Keine eigene Serverinfrastruktur
+- Authentifizierter Admin-Login (Netlify Identity)
+- Änderungen sind global und sofort sichtbar nach Deploy
+- Einfaches Rollback via Git
+
+### Benötigte Schritte (für README / Setup)
+1. GitHub Repository erstellen (privat/öffentlich).  
+2. Netlify Account erstellen und mit GitHub verbinden.  
+3. Netlify Identity aktivieren (für Login).  
+4. Netlify CMS konfigurieren:
+   - `static/admin/config.yml` anlegen mit Collections für `categories` und `offers`.
+   - Collections schreiben Dateien z. B. als JSON oder Markdown im Repo (`data/categories/*.json` oder `content/offers/*.md`).
+5. Netlify-Build-Settings: `npm run build` (Vite-Build) als Build-Befehl.
+6. Deploy durchführen — Admin erreichbar unter `/admin`.
+
+### Beispiel: Collections (konzeptionell)
+- Collection: Categories
+  - Folder: `data/categories`
+  - Format: JSON (oder individual JSON files pro Kategorie)
+  - Fields: id, name, slug, short_description, image, icon
+
+- Collection: Offers
+  - Folder: `data/offers`
+  - Format: JSON (oder Markdown)
+  - Fields: id, title, description, price, old_price, valid_until, image, category
+
+### Sicherheit & Rechte
+- Netlify Identity verwaltet User/Passwort. Erstelle mindestens einen Admin-User.
+- Optional: Git Gateway (Netlify) für direkten Commit in GitHub.
+- Hinweise im README zum sicheren Umgang mit Credentials.
+
+---
+
+## 5. Fallback & lokale Admin-Variante (optional)
+Falls du Netlify CMS nicht sofort einrichten willst, implementiere eine einfache clientseitige Admin-Seite als Interimslösung:
+
+- `/admin-local` mit einfachem Login (hart codiertes Passwort in `env` während Entwicklung).
+- Lädt `categories.json` und `offers.json` in Memory.
+- Ermöglicht Add/Edit/Delete.
+- Bietet JSON-Export (Download file) und JSON-Import (Upload file).
+- **Wichtig:** Dokumentiere klar, dass diese Variante **nur lokal** wirkt — Änderungen müssen per Upload in das Repo (oder per Netlify UI) übernommen werden, damit sie global werden.
+
+---
+
+## 6. Technische Anforderungen / Stack
+
+### Bevorzugter Stack
+- Framework: **React** (Vite)  
+- Styling: **Tailwind CSS** empfohlen (oder CSS Modules / Styled Components)  
+- Bilder: `/public/assets/placeholders/` (royalty-free)  
+- Routing: React Router (Datei-basiertes Routing möglich)  
+- Data Fetch: `fetch()` lokale `data/*.json` oder Import der JSONs beim Build  
+- State Management: React State / Context (klein)  
+- Forms: einfache Form-Handling-Bibliothek optional (z. B. react-hook-form)
+
+### Ordnerstruktur (empfohlen)
+/src
+/components
+Navbar.jsx
+Footer.jsx
+CategoryCard.jsx
+OfferCard.jsx
+SectionHeader.jsx
+/pages
+Home.jsx
+About.jsx
+Products.jsx
+Offers.jsx
+Locations.jsx
+Contact.jsx
+/admin (nur falls lokales admin fallback)
+LoginLocal.jsx
+AdminDashboard.jsx
+CategoryEditor.jsx
+OfferEditor.jsx
+/styles
+theme.css / tailwind.css
+/data
+categories.json
+offers.json
+/assets
+/images
+/icons
+public
+index.html
+static
+admin (Netlify CMS assets)
+README.md
+package.json
+vite.config.js
+
+yaml
+Copy code
+
+---
+
+## 7. Accessibility & Performance
+- Alt-Texte für alle Bilder.  
+- Kontrast: sicherstellen, dass Primärtext-Kombinationen WCAG-konform sind.  
+- Lazy-loading für Bilder (loading="lazy").  
+- Optimierte Bilder (WebP möglich).  
+- Mobile-first responsive Layout.  
+- Minimale Bundles – Vite sorgt für schnelle Builds.
+
+---
+
+## 8. README (must-have Inhalte)
+README muss enthalten:
+1. Projektbeschreibung (kurz)
+2. Voraussetzungen (Node 18+, npm/yarn)
+3. Lokale Installation:
+   - `npm install`
+   - `npm run dev`
+4. Build:
+   - `npm run build`
+   - `npm run preview` (optional)
+5. Deploy (Netlify):
+   - Repo verbinden
+   - Build command `npm run build`
+   - Publishes directory `dist/`
+   - Netlify Identity & Git Gateway aktivieren
+   - Admin: `/admin` (Netlify CMS)
+6. Netlify CMS Setup:
+   - Beispiel `static/admin/config.yml` (kurze Anleitung)
+   - Beispiel Collections (categories/offers) — Pfade erklären
+7. Admin-Fallback (falls implementiert):
+   - Erklärung: lokal vs global, wie man exportierte JSONs in Repo aktualisiert
+8. How to change the CMS schema / Add fields
+9. Hinweise zur Sicherheit (Credentials, Identity)
+10. Kontakt / Support-Info für Weiterentwicklung
+
+---
+
+## 9. Deliverables (was Cursor/DU erzeugen soll)
+- Vollständiges React + Vite Projekt (siehe Ordnerstruktur)  
+- Alle Pages & Komponenten implementiert  
+- `data/categories.json` & `data/offers.json` mit Beispiel-Einträgen (Deutsch)  
+- `static/admin/config.yml` für Netlify CMS (mit Collections & Felddefinitionen)  
+- README mit allen Schritten (siehe oben)  
+- Tailwind/Tokens oder Theme-Datei mit Farbpalette und Variablen  
+- Optional: minimaler lokaler Admin-Fallback (Admin UI + JSON Import/Export)  
+- Deployment-Checkliste (für Netlify)
+
+---
+
+## 10. Beispiel-Inhalte (Beispiele, die erzeugt werden sollen)
+### categories.json (Beispiel-Eintrag)
+```json
+[
+  {
+    "id": "fresh-fruit",
+    "name": "Frisches Obst",
+    "slug": "frisches-obst",
+    "short_description": "Täglich frische Früchte aus der Region und aus Asien.",
+    "image": "/assets/images/fruits.jpg",
+    "icon": "/assets/icons/fruit.svg"
+  }
+]
+offers.json (Beispiel-Eintrag)
+json
+Copy code
+[
+  {
+    "id": "offer-001",
+    "title": "Mangos (1kg)",
+    "description": "Saftige Alphonso Mangos, Sonderpreis diese Woche.",
+    "price": 4.99,
+    "old_price": 6.99,
+    "valid_until": "2025-12-07",
+    "image": "/assets/images/mango.jpg",
+    "category_id": "fresh-fruit"
+  }
+]

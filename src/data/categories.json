@@ -1,0 +1,19 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Obst & Gemüse",
+      "image": "/images/categories/obst-gemuese.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Getränke",
+      "image": "/images/categories/getraenke.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Backwaren",
+      "image": "/images/categories/backwaren.jpg"
+    }
+  ]
+}
