@@ -1,6 +1,6 @@
 import React from "react";
 
-const OfferCard = ({ title, description, price, image, validUntil }) => (
+const OfferCard = ({ title, description, price, old_price, image, validUntil }) => (
   <div className="bg-white rounded shadow hover:shadow-lg transition overflow-hidden flex flex-col">
     <img
       src={image}
@@ -14,7 +14,10 @@ const OfferCard = ({ title, description, price, image, validUntil }) => (
         <p className="text-dark/80 mb-2">{description}</p>
       </div>
       <div className="flex items-center justify-between mt-2">
-        <span className="font-semibold text-lg text-secondary">{price}</span>
+        <div className="flex flex-col">
+          {old_price && <span className="text-sm text-gray-400 line-through">{old_price}</span>}
+          <span className="font-semibold text-lg text-secondary">{price}</span>
+        </div>
         <span className="text-xs text-dark/50">Gültig bis {validUntil}</span>
       </div>
     </div>

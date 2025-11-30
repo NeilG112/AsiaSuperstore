@@ -1,19 +1,28 @@
 {
   "categories": [
     {
-      "id": 1,
+      "id": "fresh-fruit",
       "name": "Obst & Gemüse",
-      "image": "/images/categories/obst-gemuese.jpg"
+      "slug": "obst-und-gemuese",
+      "short_description": "Täglich frische Früchte und Gemüse aus der Region und Asien.",
+      "image": "/images/categories/obst-gemuese.jpg",
+      "icon": "/assets/icons/fruit.svg"
     },
     {
-      "id": 2,
+      "id": "drinks",
       "name": "Getränke",
-      "image": "/images/categories/getraenke.jpg"
+      "slug": "getraenke",
+      "short_description": "Erfrischende asiatische Getränke und Tees.",
+      "image": "/images/categories/getraenke.jpg",
+      "icon": "/assets/icons/drinks.svg"
     },
     {
-      "id": 3,
+      "id": "bakery",
       "name": "Backwaren",
-      "image": "/images/categories/backwaren.jpg"
+      "slug": "backwaren",
+      "short_description": "Frische Backwaren und süße Leckereien.",
+      "image": "/images/categories/backwaren.jpg",
+      "icon": "/assets/icons/bakery.svg"
     }
   ]
 }

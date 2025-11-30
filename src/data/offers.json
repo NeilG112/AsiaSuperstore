@@ -1,20 +1,24 @@
 {
   "offers": [
     {
-      "id": 1,
+      "id": "offer-001",
       "title": "Bio Äpfel",
       "description": "Frische Bio Äpfel aus der Region.",
       "price": "1,99 € / kg",
+      "old_price": "2,49 € / kg",
       "image": "/images/offers/aepfel.jpg",
-      "validUntil": "2025-12-07"
+      "validUntil": "2025-12-07",
+      "category_id": "fresh-fruit"
     },
     {
-      "id": 2,
+      "id": "offer-002",
       "title": "Bauernbrot",
       "description": "Knuspriges Bauernbrot, frisch gebacken.",
       "price": "2,49 € / Laib",
+      "old_price": "3,00 € / Laib",
       "image": "/images/offers/bauernbrot.jpg",
-      "validUntil": "2025-12-07"
+      "validUntil": "2025-12-07",
+      "category_id": "bakery"
     }
   ]
 }

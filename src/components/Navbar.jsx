@@ -3,9 +3,9 @@ import { Link, NavLink } from "react-router-dom";
 
 const navItems = [
   { to: "/", label: "Home" },
-  { to: "/ueber-uns", label: "Über Uns" },
+  { to: "/ueber", label: "Über Uns" },
   { to: "/produkte", label: "Produkte" },
-  { to: "/woechentliche-angebote", label: "Wöchentliche Angebote" },
+  { to: "/angebote", label: "Wöchentliche Angebote" },
   { to: "/standorte", label: "Standorte" },
   { to: "/kontakt", label: "Kontakt" }
 ];
