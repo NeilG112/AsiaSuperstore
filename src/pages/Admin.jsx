@@ -72,6 +72,7 @@ const Admin = () => {
                             <input
                                 type="text"
                                 id="username"
+                                name="username"
                                 value={loginUsername}
                                 onChange={(e) => setLoginUsername(e.target.value)}
                                 className="input-field"
@@ -88,6 +89,7 @@ const Admin = () => {
                             <input
                                 type="password"
                                 id="password"
+                                name="password"
                                 value={loginPassword}
                                 onChange={(e) => setLoginPassword(e.target.value)}
                                 className="input-field"
@@ -230,8 +232,8 @@ const Admin = () => {
                         <button
                             onClick={() => setActiveTab('categories')}
                             className={`flex-1 py-4 px-6 font-semibold transition-colors ${activeTab === 'categories'
-                                    ? 'border-b-2 border-primary text-primary'
-                                    : 'text-gray-600 hover:text-primary'
+                                ? 'border-b-2 border-primary text-primary'
+                                : 'text-gray-600 hover:text-primary'
                                 }`}
                         >
                             Kategorien ({categories.length})
@@ -239,8 +241,8 @@ const Admin = () => {
                         <button
                             onClick={() => setActiveTab('offers')}
                             className={`flex-1 py-4 px-6 font-semibold transition-colors ${activeTab === 'offers'
-                                    ? 'border-b-2 border-primary text-primary'
-                                    : 'text-gray-600 hover:text-primary'
+                                ? 'border-b-2 border-primary text-primary'
+                                : 'text-gray-600 hover:text-primary'
                                 }`}
                         >
                             Angebote ({offers.length})

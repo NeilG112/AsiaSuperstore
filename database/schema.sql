@@ -1,11 +1,11 @@
 -- Asian Superstore Database Schema for Neon (PostgreSQL)
 
 -- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- Categories Table
 CREATE TABLE IF NOT EXISTS categories (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
   short_description TEXT,
@@ -17,14 +17,14 @@ CREATE TABLE IF NOT EXISTS categories (
 
 -- Offers Table
 CREATE TABLE IF NOT EXISTS offers (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   description TEXT,
   price DECIMAL(10, 2) NOT NULL,
   old_price DECIMAL(10, 2),
   valid_until DATE NOT NULL,
   image TEXT,
-  category_id UUID REFERENCES categories(id) ON DELETE SET NULL,
+  category_id TEXT REFERENCES categories(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -34,7 +34,7 @@ CREATE INDEX IF NOT EXISTS idx_categories_slug ON categories(slug);
 CREATE INDEX IF NOT EXISTS idx_offers_valid_until ON offers(valid_until);
 CREATE INDEX IF NOT EXISTS idx_offers_category_id ON offers(category_id);
 
--- Insert sample categories
+-- Insert sample categories (will be ignored if they already exist)
 INSERT INTO categories (id, name, slug, short_description, icon) VALUES
   ('fresh-fruit', 'Frisches Obst', 'frisches-obst', 'Täglich frische Früchte aus der Region und Asien.', '🍎'),
   ('vegetables', 'Gemüse & Salate', 'gemuese-salate', 'Knackiges Gemüse und frische Salate für jeden Tag.', '🥬'),
@@ -42,7 +42,7 @@ INSERT INTO categories (id, name, slug, short_description, icon) VALUES
   ('spices', 'Gewürze & Saucen', 'gewuerze-saucen', 'Authentische asiatische Gewürze und Saucen.', '🌶️'),
   ('tea-drinks', 'Tee & Getränke', 'tee-getraenke', 'Erlesene Teesorten und asiatische Getränke.', '🍵'),
   ('frozen', 'Tiefkühlprodukte', 'tiefkuehl', 'Hochwertige Tiefkühlprodukte und Fertiggerichte.', '❄️')
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (id) DO NOTHING;
 
 -- Insert sample offers
 INSERT INTO offers (id, title, description, price, old_price, valid_until, category_id) VALUES

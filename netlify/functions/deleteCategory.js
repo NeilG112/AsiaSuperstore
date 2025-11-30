@@ -1,11 +1,16 @@
 const { Pool } = require('pg')
 
-const pool = new Pool({
-    connectionString: process.env.VITE_NEON_DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-})
+let pool = null
+
+// Only create pool if database URL is configured
+if (process.env.VITE_NEON_DATABASE_URL) {
+    pool = new Pool({
+        connectionString: process.env.VITE_NEON_DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    })
+}
 
 /**
  * Delete a category
@@ -22,6 +27,18 @@ exports.handler = async (event, context) => {
             statusCode: 200,
             headers,
             body: ''
+        }
+    }
+
+    // If no database configured, return error
+    if (!pool) {
+        return {
+            statusCode: 503,
+            headers,
+            body: JSON.stringify({
+                error: 'Database not configured',
+                message: 'Please set VITE_NEON_DATABASE_URL environment variable'
+            })
         }
     }
 
@@ -51,7 +68,10 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: 'Failed to delete category' })
+            body: JSON.stringify({
+                error: 'Failed to delete category',
+                details: error.message
+            })
         }
     }
 }
