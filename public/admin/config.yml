@@ -4,11 +4,11 @@ backend:
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 collections:
-  - name: "data"
-    label: "Daten"
+  - name: "categories_col"
+    label: "Kategorien"
     files:
       - name: "categories"
-        label: "Kategorien"
+        label: "Kategorien Liste"
         file: "src/data/categories.json"
         fields:
           - { label: "Kategorien", name: "categories", widget: "list", fields: [
@@ -19,8 +19,11 @@ collections:
               { label: "Bild", name: "image", widget: "image", required: false },
               { label: "Icon", name: "icon", widget: "image", required: false }
             ] }
+  - name: "offers_col"
+    label: "Angebote"
+    files:
       - name: "offers"
-        label: "Angebote"
+        label: "Angebote Liste"
         file: "src/data/offers.json"
         fields:
           - { label: "Angebote", name: "offers", widget: "list", fields: [
