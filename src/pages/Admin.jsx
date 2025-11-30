@@ -423,11 +423,10 @@ const CategoryTab = ({ categories, formData, setFormData, editingItem, setEditin
                     <input
                         type="text"
                         name="category-icon"
-                        placeholder="Icon (Emoji)"
+                        placeholder="Icon (Emoji - optional)"
                         value={formData.icon || ''}
                         onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
                         className="input-field"
-                        required
                     />
                     <input
                         type="url"
