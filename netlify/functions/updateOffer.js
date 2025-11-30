@@ -1,11 +1,15 @@
 const { Pool } = require('pg')
 
-const pool = new Pool({
-    connectionString: process.env.VITE_NEON_DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-})
+let pool = null
+
+if (process.env.VITE_NEON_DATABASE_URL) {
+    pool = new Pool({
+        connectionString: process.env.VITE_NEON_DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false
+        }
+    })
+}
 
 /**
  * Update an existing offer
@@ -25,17 +29,42 @@ exports.handler = async (event, context) => {
         }
     }
 
+    if (!pool) {
+        return {
+            statusCode: 503,
+            headers,
+            body: JSON.stringify({ error: 'Database not configured' })
+        }
+    }
+
     try {
         const data = JSON.parse(event.body)
-        const { id, title, description, price, old_price, valid_until, image, category_id } = data
+        const { id, product_id, new_price, valid_until } = data
+
+        // Get product to calculate discount
+        const productResult = await pool.query(
+            'SELECT price FROM products WHERE id = $1',
+            [product_id]
+        )
+
+        if (productResult.rows.length === 0) {
+            return {
+                statusCode: 404,
+                headers,
+                body: JSON.stringify({ error: 'Product not found' })
+            }
+        }
+
+        const oldPrice = parseFloat(productResult.rows[0].price)
+        const newPriceFloat = parseFloat(new_price)
+        const discountPercent = Math.round(((oldPrice - newPriceFloat) / oldPrice) * 100)
 
         const result = await pool.query(
             `UPDATE offers 
-       SET title = $1, description = $2, price = $3, old_price = $4, 
-           valid_until = $5, image = $6, category_id = $7 
-       WHERE id = $8 
+       SET product_id = $1, discount_percent = $2, new_price = $3, valid_until = $4
+       WHERE id = $5 
        RETURNING *`,
-            [title, description, price, old_price || null, valid_until, image || '', category_id, id]
+            [product_id, discountPercent, newPriceFloat, valid_until, id]
         )
 
         if (result.rows.length === 0) {
@@ -56,7 +85,10 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: 'Failed to update offer' })
+            body: JSON.stringify({
+                error: 'Failed to update offer',
+                details: error.message
+            })
         }
     }
 }

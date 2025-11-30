@@ -12,7 +12,7 @@ if (process.env.VITE_NEON_DATABASE_URL) {
 }
 
 /**
- * Create a new offer (references a product)
+ * Create a new product
  */
 exports.handler = async (event, context) => {
     const headers = {
@@ -39,34 +39,16 @@ exports.handler = async (event, context) => {
 
     try {
         const data = JSON.parse(event.body)
-        const { product_id, new_price, valid_until } = data
-
-        // Get product to calculate discount
-        const productResult = await pool.query(
-            'SELECT price FROM products WHERE id = $1',
-            [product_id]
-        )
-
-        if (productResult.rows.length === 0) {
-            return {
-                statusCode: 404,
-                headers,
-                body: JSON.stringify({ error: 'Product not found' })
-            }
-        }
-
-        const oldPrice = parseFloat(productResult.rows[0].price)
-        const newPriceFloat = parseFloat(new_price)
-        const discountPercent = Math.round(((oldPrice - newPriceFloat) / oldPrice) * 100)
+        const { name, description, price, image, category_id, in_stock } = data
 
         // Generate simple ID
-        const id = 'offer-' + Date.now()
+        const id = 'prod-' + Date.now()
 
         const result = await pool.query(
-            `INSERT INTO offers (id, product_id, discount_percent, new_price, valid_until) 
-       VALUES ($1, $2, $3, $4, $5) 
+            `INSERT INTO products (id, name, description, price, image, category_id, in_stock) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7) 
        RETURNING *`,
-            [id, product_id, discountPercent, newPriceFloat, valid_until]
+            [id, name, description || '', parseFloat(price), image || '', category_id, in_stock !== false]
         )
 
         return {
@@ -75,12 +57,12 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(result.rows[0])
         }
     } catch (error) {
-        console.error('Error creating offer:', error)
+        console.error('Error creating product:', error)
         return {
             statusCode: 500,
             headers,
             body: JSON.stringify({
-                error: 'Failed to create offer',
+                error: 'Failed to create product',
                 details: error.message
             })
         }

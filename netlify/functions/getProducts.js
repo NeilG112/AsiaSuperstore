@@ -12,7 +12,7 @@ if (process.env.VITE_NEON_DATABASE_URL) {
 }
 
 /**
- * Get all offers with product and category information
+ * Get all products
  */
 exports.handler = async (event, context) => {
     const headers = {
@@ -30,46 +30,20 @@ exports.handler = async (event, context) => {
     }
 
     if (!pool) {
-        // Fallback mock data
-        const mockOffers = [
-            {
-                id: 'offer-001',
-                title: 'Sample Offer',
-                description: 'Database nicht konfiguriert',
-                price: 9.99,
-                old_price: 14.99,
-                valid_until: '2025-12-31',
-                image: '',
-                category_id: 'fresh-fruit'
-            }
-        ]
-
+        // Fallback to mock data
         return {
             statusCode: 200,
             headers,
-            body: JSON.stringify(mockOffers)
+            body: JSON.stringify([])
         }
     }
 
     try {
         const result = await pool.query(
-            `SELECT 
-        o.id,
-        o.product_id,
-        o.discount_percent,
-        o.new_price as price,
-        o.valid_until,
-        p.name as title,
-        p.description,
-        p.price as old_price,
-        p.image,
-        p.category_id,
-        c.name as category_name
-       FROM offers o
-       JOIN products p ON o.product_id = p.id
-       LEFT JOIN categories c ON p.category_id = c.id
-       WHERE o.valid_until >= CURRENT_DATE
-       ORDER BY o.valid_until ASC`
+            `SELECT p.*, c.name as category_name 
+       FROM products p 
+       LEFT JOIN categories c ON p.category_id = c.id 
+       ORDER BY p.name ASC`
         )
 
         return {
@@ -83,7 +57,7 @@ exports.handler = async (event, context) => {
             statusCode: 500,
             headers,
             body: JSON.stringify({
-                error: 'Failed to fetch offers',
+                error: 'Failed to fetch products',
                 details: error.message
             })
         }
