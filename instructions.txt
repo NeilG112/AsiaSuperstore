@@ -1,161 +1,149 @@
-# Projekt-Spezifikation — Asian Superstore Website (vollständig & ausführlich)
+# Projekt-Spezifikation — Asian Superstore Website (React + Vite + Neon + Netlify Functions)
 
 ## Kurzbeschreibung
 Erstelle eine moderne, responsive und elegante Informations-Website für den Supermarkt **„Asian Superstore“**.  
-Ziel: ansprechende Präsentation der Marke, Produktkategorien, wöchentliche Angebote und Filialen – plus ein einfaches Admin-System, mit dem der Ladenbesitzer Änderungen global und dauerhaft durchführen kann.
+Ziel: Präsentation von Marke, Produktkategorien, wöchentlichen Angeboten und Filialen.  
 
-Wichtig: Die Seite ist **kein Onlineshop**. Sie soll auf **Netlify** oder **GitHub Pages** deploybar sein. Änderungen durch das Admin-Panel müssen **global** gespeichert werden — wir nutzen dafür **Netlify CMS**, das Änderungen direkt in das GitHub-Repository committet und die Seite automatisch neu deployed.
-
-Sprache: **Deutsch**. Ton: freundlich, professionell, frisch, multikulturell.  
-Slogan: **„Bringt die Welt zusammen.“**
+- Kein Online-Shop
+- Deployment auf **Netlify**
+- Admin-Dashboard mit globaler Speicherung über **Neon (Postgres)** + **Netlify Functions**
+- Sprache: Deutsch
+- Ton: freundlich, professionell, frisch, multikulturell
+- Slogan: **„Bringt die Welt zusammen.“**
 
 ---
 
-## 1. Design & Branding (ausführlich)
-Ziel: Premium / frisch / organisch / Halal → nicht schwarz-weiß.
-
-### Farbpalette (Beispielwerte; Cursor/Designer kann leichte Varianten wählen)
-- Primärgrün (frisch): #2E8B57 (oder #27A96B)  
-- Sekundärgrün (Akzente): #8FD3A3  
-- Creme / Natur: #FFF8F0  
+## 1. Design & Branding
+### Farbpalette
+- Primärgrün: #2E8B57  
+- Sekundärgrün: #8FD3A3  
+- Creme/Natur: #FFF8F0  
 - Warmes Beige: #E9DCC9  
-- Dunkles Anthrazit (Text): #222222  
-- Akzentfarbe (CTA / Highlights): #FFB64D (warmes Gold/Orange)
+- Dunkles Anthrazit: #222222  
+- Akzentfarbe: #FFB64D  
 
-> Hinweis: Verwende die Primärfarbe für Buttons/Links/Hero-Highlights, Sekundärfarbe für Hover/Badges, Creme/Beige als Hintergrundsektionen. Text standardmäßig in Anthrazit. Keine reine Schwarz-Weiß-Ästhetik.
+> Primärfarbe für Buttons/Links/Hero, Sekundär für Hover/Badges, Creme/Beige für Hintergrund, Anthrazit für Text.
 
 ### Typografie
-- Überschriften: Poppins oder Inter (stark, modern)  
-- Fließtext: Inter oder system-fallback sans-serif  
-- Gewicht: H1 = 700, H2 = 600, Body = 400  
-- Zeilenhöhe großzügig für Lesbarkeit (1.4–1.6)
+- Überschriften: Poppins oder Inter, H1=700, H2=600  
+- Body: Inter, Gewicht 400  
+- Zeilenhöhe: 1.4–1.6
 
 ### Bildsprache
-- Frisches Obst/Gemüse, asiatische Gewürze, Reis, Tees. Keine Fotos vom echten Laden nötig (Platzhalter/Stock-Bilder).
-- Icons für Kategorien (lineare Icons, rundes Icon-Frame).
+- Frisches Obst/Gemüse, asiatische Gewürze, Reis, Tees  
+- Icons für Kategorien  
+- Keine Fotos vom Laden nötig
 
 ### UI-Elemente
-- Große Hero-Sektion (Slogan + CTA "Angebote ansehen")  
-- Category Cards (Bild/Icon + kurzer Text + Link)  
-- Offer Cards (Preis, kurzer Beschreibungstext, Badge „Angebot“)  
-- Saubere, minimale Navbar + Footer mit Kontaktinfos  
+- Hero-Sektion: Slogan + CTA  
+- Category Cards (Bild/Icon + Text)  
+- Offer Cards (Preis, Beschreibung, Badge „Angebot“)  
+- Navbar + Footer  
 - Responsive Grid für Produkte & Angebote
 
 ---
 
-## 2. Seitenstruktur (Seiten & Inhalt)
-
+## 2. Seitenstruktur
 ### / (Home)
-- Hero (Slogan, CTA)
-- Kurztext: Wer wir sind (1–2 Absätze)
-- Kategorien-Vorschau (4–6 Karten)
-- Wöchentliche Angebote (3–6 Items als Vorschau)
-- Standort-Preview (2 Standorte mit Mini-Karten)
-- Footer-CTA: „Besuche uns / Rufe an“
+- Hero mit Slogan & CTA  
+- Kurztext „Wer wir sind“  
+- Kategorien-Vorschau (4–6 Karten)  
+- Vorschau der wöchentlichen Angebote (3–6 Items)  
+- Standort-Vorschau (Mini-Karten)  
+- Footer-CTA
 
-### /ueber (Über Uns)
-- Geschichte/Philosophie (Kurz)
-- Fokus: Multikulturelle Auswahl, Halal, Frisch
-- Team / Bilder (optional)
+### /ueber
+- Kurztext: Philosophie, Multikulturelle Auswahl, Halal, Frisch  
+- Platzhalterbilder
 
-### /produkte (Produkte — Kategorienübersicht)
-- Grid mit Kategorien (Icon, Name, kurzer Text)
-- Jede Kategorie linkbar zu einer Filteransicht (optional)
+### /produkte
+- Grid aller Produktkategorien (Icon + Name + Text)  
+- Optional: Filteransicht für Kategorie
 
-### /angebote (Wöchentliche Angebote)
-- Gitteransicht aller aktuellen Angebote
-- Angebote laden dynamisch aus `offers.json` (oder aus Git/GitHub via Netlify CMS)
+### /angebote
+- Alle Angebote (Grid)  
+- Daten aus Neon DB via API
 
-### /standorte (Standorte)
-- Zwei vollständige Adressen:
-  - Am Kronenhof 17, 73728 Esslingen
-  - Pliensaustraße 42, 73728 Esslingen
-- Telefonnummern
-- Öffnungszeiten (Platzhalter in Projekt; editierbar via CMS)
-- Google Maps Embed (optional, konfigurierbar)
+### /standorte
+- Adressen:  
+  1. Am Kronenhof 17, 73728 Esslingen  
+  2. Pliensaustraße 42, 73728 Esslingen  
+- Telefonnummern  
+- Öffnungszeiten (editierbar via Admin)  
+- Google Maps Embed (optional)
 
-### /kontakt (Kontakt)
-- Telefonnummern
-- Platzhalter-E-Mail: info@asiansuperstore.de
-- Kontaktformular (statisch; optional Formspree oder netlify forms)
+### /kontakt
+- Telefonnummern  
+- Platzhalter E-Mail: info@asiansuperstore.de  
+- Kontaktformular (statisch, optional Netlify Forms)
 
-### /admin (Admin-Panel — wird von Netlify CMS bereitgestellt)
-- Netlify CMS Interface zur Bearbeitung von Kategorien & Angeboten
-- Optional: ein einfacher Local-Admin als Fallback (siehe Abschnitt Fallback)
-
----
-
-## 3. Daten & Content (Format & Speicherort)
-
-### Hauptdatenquellen
-- `data/categories.json` — Liste der Kategorien (id, name, slug, short_description, image, icon)
-- `data/offers.json` — Wöchentliche Angebote (id, title, description, price, old_price, valid_until, image, category_id)
-- `content/` — optionale Markdown/MDX-Dateien für Texte (z. B. Über Uns), wenn Netlify CMS so konfiguriert ist.
-
-**Wichtig:** Obwohl CMS die primäre Bearbeitungsoberfläche ist, sollen `categories.json` und `offers.json` auch im Repo existieren, damit Cursor lokale Platzhalter laden kann.
+### /admin
+- Admin-Dashboard
+- Login via **Netlify Identity**
+- CRUD-Funktionen (Categories + Offers)  
+- Daten werden **direkt in Neon DB gespeichert** über Serverless Functions
 
 ---
 
-## 4. Admin & Global Storage — Netlify CMS (ausführlich)
-Netlify CMS wird als statisches Admin-Interface installiert. Änderungen werden per Git commit & push in dein GitHub-Repository geschrieben und Netlify deployed automatisch die Seite.
+## 3. Daten & DB-Setup (Neon / Postgres)
 
-### Vorteile
-- Keine eigene Serverinfrastruktur
-- Authentifizierter Admin-Login (Netlify Identity)
-- Änderungen sind global und sofort sichtbar nach Deploy
-- Einfaches Rollback via Git
+### Tabellen
+**categories**
+- id (UUID PK)  
+- name (Text)  
+- slug (Text)  
+- short_description (Text)  
+- image (Text / URL)  
+- icon (Text / URL)
 
-### Benötigte Schritte (für README / Setup)
-1. GitHub Repository erstellen (privat/öffentlich).  
-2. Netlify Account erstellen und mit GitHub verbinden.  
-3. Netlify Identity aktivieren (für Login).  
-4. Netlify CMS konfigurieren:
-   - `static/admin/config.yml` anlegen mit Collections für `categories` und `offers`.
-   - Collections schreiben Dateien z. B. als JSON oder Markdown im Repo (`data/categories/*.json` oder `content/offers/*.md`).
-5. Netlify-Build-Settings: `npm run build` (Vite-Build) als Build-Befehl.
-6. Deploy durchführen — Admin erreichbar unter `/admin`.
+**offers**
+- id (UUID PK)  
+- title (Text)  
+- description (Text)  
+- price (Decimal)  
+- old_price (Decimal)  
+- valid_until (Date)  
+- image (Text / URL)  
+- category_id (FK → categories.id)
 
-### Beispiel: Collections (konzeptionell)
-- Collection: Categories
-  - Folder: `data/categories`
-  - Format: JSON (oder individual JSON files pro Kategorie)
-  - Fields: id, name, slug, short_description, image, icon
+Optional: `locations` für Filialen, `users` für Admins
 
-- Collection: Offers
-  - Folder: `data/offers`
-  - Format: JSON (oder Markdown)
-  - Fields: id, title, description, price, old_price, valid_until, image, category
+### API / Serverless Functions
+- `/netlify/functions/getCategories` → GET  
+- `/netlify/functions/getOffers` → GET  
+- `/netlify/functions/createCategory` → POST  
+- `/netlify/functions/updateCategory` → PUT  
+- `/netlify/functions/deleteCategory` → DELETE  
+- `/netlify/functions/createOffer` → POST  
+- `/netlify/functions/updateOffer` → PUT  
+- `/netlify/functions/deleteOffer` → DELETE  
 
-### Sicherheit & Rechte
-- Netlify Identity verwaltet User/Passwort. Erstelle mindestens einen Admin-User.
-- Optional: Git Gateway (Netlify) für direkten Commit in GitHub.
-- Hinweise im README zum sicheren Umgang mit Credentials.
-
----
-
-## 5. Fallback & lokale Admin-Variante (optional)
-Falls du Netlify CMS nicht sofort einrichten willst, implementiere eine einfache clientseitige Admin-Seite als Interimslösung:
-
-- `/admin-local` mit einfachem Login (hart codiertes Passwort in `env` während Entwicklung).
-- Lädt `categories.json` und `offers.json` in Memory.
-- Ermöglicht Add/Edit/Delete.
-- Bietet JSON-Export (Download file) und JSON-Import (Upload file).
-- **Wichtig:** Dokumentiere klar, dass diese Variante **nur lokal** wirkt — Änderungen müssen per Upload in das Repo (oder per Netlify UI) übernommen werden, damit sie global werden.
+- Serverless Functions prüfen Auth via Netlify Identity / JWT  
+- Frontend nutzt `fetch()` oder React Query / SWR für Daten
 
 ---
 
-## 6. Technische Anforderungen / Stack
+## 4. Admin-Dashboard
+- Login via Netlify Identity  
+- Dashboard `/admin`  
+- Editierbare Tabellen für Categories & Offers  
+- CRUD Buttons: Hinzufügen, Bearbeiten, Löschen  
+- Änderungen sofort in Neon DB global gespeichert  
+- Optional: JSON Import/Export als Backup
 
-### Bevorzugter Stack
-- Framework: **React** (Vite)  
-- Styling: **Tailwind CSS** empfohlen (oder CSS Modules / Styled Components)  
-- Bilder: `/public/assets/placeholders/` (royalty-free)  
-- Routing: React Router (Datei-basiertes Routing möglich)  
-- Data Fetch: `fetch()` lokale `data/*.json` oder Import der JSONs beim Build  
-- State Management: React State / Context (klein)  
-- Forms: einfache Form-Handling-Bibliothek optional (z. B. react-hook-form)
+---
 
-### Ordnerstruktur (empfohlen)
+## 5. Frontend
+- React + Vite  
+- Tailwind CSS (oder CSS Modules)  
+- Routing: React Router  
+- State: React State / Context  
+- Lazy-loading für Bilder  
+- Alt-Texte für Barrierefreiheit
+
+---
+
+## 6. Ordnerstruktur
 /src
 /components
 Navbar.jsx
@@ -163,6 +151,7 @@ Footer.jsx
 CategoryCard.jsx
 OfferCard.jsx
 SectionHeader.jsx
+Button.jsx
 /pages
 Home.jsx
 About.jsx
@@ -170,23 +159,30 @@ Products.jsx
 Offers.jsx
 Locations.jsx
 Contact.jsx
-/admin (nur falls lokales admin fallback)
-LoginLocal.jsx
-AdminDashboard.jsx
-CategoryEditor.jsx
-OfferEditor.jsx
+Admin.jsx
+/api (optional wrappers)
 /styles
-theme.css / tailwind.css
-/data
-categories.json
-offers.json
+tailwind.css / theme.css
+/hooks
+useFetchCategories.js
+useFetchOffers.js
 /assets
 /images
 /icons
+/data
+categories.json (Platzhalter)
+offers.json (Platzhalter)
 public
 index.html
-static
-admin (Netlify CMS assets)
+netlify/functions
+getCategories.js
+getOffers.js
+createCategory.js
+updateCategory.js
+deleteCategory.js
+createOffer.js
+updateOffer.js
+deleteOffer.js
 README.md
 package.json
 vite.config.js
@@ -196,69 +192,37 @@ Copy code
 
 ---
 
-## 7. Accessibility & Performance
-- Alt-Texte für alle Bilder.  
-- Kontrast: sicherstellen, dass Primärtext-Kombinationen WCAG-konform sind.  
-- Lazy-loading für Bilder (loading="lazy").  
-- Optimierte Bilder (WebP möglich).  
-- Mobile-first responsive Layout.  
-- Minimale Bundles – Vite sorgt für schnelle Builds.
+## 7. Deployment
+- Netlify Build: `npm run build`  
+- Publish Directory: `dist/`  
+- Netlify Identity aktivieren  
+- Neon Credentials in Environment Variables speichern
 
 ---
 
-## 8. README (must-have Inhalte)
-README muss enthalten:
-1. Projektbeschreibung (kurz)
-2. Voraussetzungen (Node 18+, npm/yarn)
-3. Lokale Installation:
-   - `npm install`
-   - `npm run dev`
-4. Build:
-   - `npm run build`
-   - `npm run preview` (optional)
-5. Deploy (Netlify):
-   - Repo verbinden
-   - Build command `npm run build`
-   - Publishes directory `dist/`
-   - Netlify Identity & Git Gateway aktivieren
-   - Admin: `/admin` (Netlify CMS)
-6. Netlify CMS Setup:
-   - Beispiel `static/admin/config.yml` (kurze Anleitung)
-   - Beispiel Collections (categories/offers) — Pfade erklären
-7. Admin-Fallback (falls implementiert):
-   - Erklärung: lokal vs global, wie man exportierte JSONs in Repo aktualisiert
-8. How to change the CMS schema / Add fields
-9. Hinweise zur Sicherheit (Credentials, Identity)
-10. Kontakt / Support-Info für Weiterentwicklung
+## 8. Sicherheit
+- Admin-Login: Netlify Identity  
+- Serverless Functions prüfen JWT / Identity  
+- Keine Hardcoded Passwörter im Frontend  
+- HTTPS automatisch via Netlify
 
 ---
 
-## 9. Deliverables (was Cursor/DU erzeugen soll)
-- Vollständiges React + Vite Projekt (siehe Ordnerstruktur)  
-- Alle Pages & Komponenten implementiert  
-- `data/categories.json` & `data/offers.json` mit Beispiel-Einträgen (Deutsch)  
-- `static/admin/config.yml` für Netlify CMS (mit Collections & Felddefinitionen)  
-- README mit allen Schritten (siehe oben)  
-- Tailwind/Tokens oder Theme-Datei mit Farbpalette und Variablen  
-- Optional: minimaler lokaler Admin-Fallback (Admin UI + JSON Import/Export)  
-- Deployment-Checkliste (für Netlify)
-
----
-
-## 10. Beispiel-Inhalte (Beispiele, die erzeugt werden sollen)
-### categories.json (Beispiel-Eintrag)
+## 9. Beispiel-Daten
+**categories.json**
 ```json
 [
   {
     "id": "fresh-fruit",
     "name": "Frisches Obst",
     "slug": "frisches-obst",
-    "short_description": "Täglich frische Früchte aus der Region und aus Asien.",
+    "short_description": "Täglich frische Früchte aus der Region und Asien.",
     "image": "/assets/images/fruits.jpg",
     "icon": "/assets/icons/fruit.svg"
   }
 ]
-offers.json (Beispiel-Eintrag)
+offers.json
+
 json
 Copy code
 [
@@ -273,3 +237,36 @@ Copy code
     "category_id": "fresh-fruit"
   }
 ]
+10. README Inhalte
+Projektbeschreibung
+
+Voraussetzungen: Node 18+, npm/yarn
+
+Installation: npm install → npm run dev
+
+Build: npm run build → npm run preview
+
+Deployment auf Netlify + Identity Setup
+
+API / Serverless Functions + Neon DB Setup
+
+Admin-Panel Login / Rechte
+
+Sicherheitshinweise
+
+11. Deliverables
+Vollständiges React + Vite Projekt
+
+Alle Seiten & Komponenten
+
+Admin-Dashboard mit globaler Neon DB Speicherung
+
+Serverless Functions für CRUD
+
+Tailwind / Theme-Datei
+
+JSON Platzhalterdateien
+
+README.md mit Setup & Deploy
+
+Saubere, modulare Struktur + Kommentare

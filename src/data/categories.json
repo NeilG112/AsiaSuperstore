@@ -1,28 +1,50 @@
-{
-  "categories": [
+[
     {
-      "id": "fresh-fruit",
-      "name": "Obst & Gemüse",
-      "slug": "obst-und-gemuese",
-      "short_description": "Täglich frische Früchte und Gemüse aus der Region und Asien.",
-      "image": "/images/categories/obst-gemuese.jpg",
-      "icon": "/assets/icons/fruit.svg"
+        "id": "fresh-fruit",
+        "name": "Frisches Obst",
+        "slug": "frisches-obst",
+        "short_description": "Täglich frische Früchte aus der Region und Asien.",
+        "image": "/assets/images/fruits.jpg",
+        "icon": "🍎"
     },
     {
-      "id": "drinks",
-      "name": "Getränke",
-      "slug": "getraenke",
-      "short_description": "Erfrischende asiatische Getränke und Tees.",
-      "image": "/images/categories/getraenke.jpg",
-      "icon": "/assets/icons/drinks.svg"
+        "id": "vegetables",
+        "name": "Gemüse & Salate",
+        "slug": "gemuese-salate",
+        "short_description": "Knackiges Gemüse und frische Salate für jeden Tag.",
+        "image": "/assets/images/vegetables.jpg",
+        "icon": "🥬"
     },
     {
-      "id": "bakery",
-      "name": "Backwaren",
-      "slug": "backwaren",
-      "short_description": "Frische Backwaren und süße Leckereien.",
-      "image": "/images/categories/backwaren.jpg",
-      "icon": "/assets/icons/bakery.svg"
+        "id": "rice-noodles",
+        "name": "Reis & Nudeln",
+        "slug": "reis-nudeln",
+        "short_description": "Vielfältige Auswahl an Reis- und Nudelsorten.",
+        "image": "/assets/images/rice.jpg",
+        "icon": "🍚"
+    },
+    {
+        "id": "spices",
+        "name": "Gewürze & Saucen",
+        "slug": "gewuerze-saucen",
+        "short_description": "Authentische asiatische Gewürze und Saucen.",
+        "image": "/assets/images/spices.jpg",
+        "icon": "🌶️"
+    },
+    {
+        "id": "tea-drinks",
+        "name": "Tee & Getränke",
+        "slug": "tee-getraenke",
+        "short_description": "Erlesene Teesorten und asiatische Getränke.",
+        "image": "/assets/images/tea.jpg",
+        "icon": "🍵"
+    },
+    {
+        "id": "frozen",
+        "name": "Tiefkühlprodukte",
+        "slug": "tiefkuehl",
+        "short_description": "Hochwertige Tiefkühlprodukte und Fertiggerichte.",
+        "image": "/assets/images/frozen.jpg",
+        "icon": "❄️"
     }
-  ]
-}
+]

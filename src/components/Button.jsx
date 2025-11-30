@@ -1,12 +1,29 @@
-import React from "react";
+import { Link } from 'react-router-dom'
 
-const Button = ({ children, className = "", ...props }) => (
-  <button
-    className={`px-5 py-2 rounded bg-primary text-white font-semibold hover:bg-secondary hover:text-dark transition-colors ${className}`}
-    {...props}
-  >
-    {children}
-  </button>
-);
+/**
+ * Reusable Button Component
+ * @param {string} variant - 'primary' or 'secondary'
+ * @param {string} to - Optional link destination
+ * @param {function} onClick - Optional click handler
+ * @param {React.ReactNode} children - Button content
+ */
+const Button = ({ variant = 'primary', to, onClick, children, className = '', type = 'button' }) => {
+    const baseClasses = variant === 'primary' ? 'btn-primary' : 'btn-secondary'
+    const combinedClasses = `${baseClasses} ${className}`
 
-export default Button;
+    if (to) {
+        return (
+            <Link to={to} className={combinedClasses}>
+                {children}
+            </Link>
+        )
+    }
+
+    return (
+        <button type={type} onClick={onClick} className={combinedClasses}>
+            {children}
+        </button>
+    )
+}
+
+export default Button

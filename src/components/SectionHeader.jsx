@@ -1,10 +1,18 @@
-import React from "react";
+/**
+ * Section Header Component
+ * Consistent section headers across the site
+ */
+const SectionHeader = ({ title, subtitle, centered = true }) => {
+    return (
+        <div className={`mb-8 md:mb-12 ${centered ? 'text-center' : ''}`}>
+            <h2 className="text-primary mb-3">{title}</h2>
+            {subtitle && (
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    {subtitle}
+                </p>
+            )}
+        </div>
+    )
+}
 
-const SectionHeader = ({ title, subtitle }) => (
-  <div className="mb-8 text-center">
-    <h2 className="text-3xl md:text-4xl font-display font-bold text-primary mb-2">{title}</h2>
-    {subtitle && <p className="text-lg text-dark/70">{subtitle}</p>}
-  </div>
-);
-
-export default SectionHeader;
+export default SectionHeader
