@@ -9,11 +9,30 @@ const pool = new Pool({
 
 /**
  * Update an existing category
- * Requires authentication
  */
 exports.handler = async (event, context) => {
     const headers = {
-        WHERE id = $6 
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'PUT, OPTIONS'
+    }
+
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers,
+            body: ''
+        }
+    }
+
+    try {
+        const data = JSON.parse(event.body)
+        const { id, name, slug, short_description, image, icon } = data
+
+        const result = await pool.query(
+            `UPDATE categories 
+       SET name = $1, slug = $2, short_description = $3, image = $4, icon = $5 
+       WHERE id = $6 
        RETURNING *`,
             [name, slug, short_description, image || '', icon || '', id]
         )
