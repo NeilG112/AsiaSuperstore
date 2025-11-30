@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useFetchCategories } from '../hooks/useFetchCategories'
 import { useFetchOffers } from '../hooks/useFetchOffers'
@@ -6,10 +6,10 @@ import Button from '../components/Button'
 
 /**
  * Admin Dashboard Component
- * Manage categories and offers with CRUD operations
+ * Simple login with hardcoded credentials
  */
 const Admin = () => {
-    const { user, loading: authLoading, login } = useAuth()
+    const { user, loading: authLoading, login, logout } = useAuth()
     const { categories, refetch: refetchCategories } = useFetchCategories()
     const { offers, refetch: refetchOffers } = useFetchOffers()
 
@@ -17,7 +17,23 @@ const Admin = () => {
     const [editingItem, setEditingItem] = useState(null)
     const [formData, setFormData] = useState({})
 
-    // Redirect if not authenticated
+    // Login form state
+    const [loginUsername, setLoginUsername] = useState('')
+    const [loginPassword, setLoginPassword] = useState('')
+    const [loginError, setLoginError] = useState('')
+
+    const handleLogin = (e) => {
+        e.preventDefault()
+        setLoginError('')
+
+        const success = login(loginUsername, loginPassword)
+        if (!success) {
+            setLoginError('Ungültige Anmeldedaten')
+            setLoginPassword('')
+        }
+    }
+
+    // Loading state
     if (authLoading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-secondary-cream">
@@ -29,18 +45,65 @@ const Admin = () => {
         )
     }
 
+    // Login form
     if (!user) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-secondary-cream">
-                <div className="card p-8 md:p-12 max-w-md w-full text-center">
-                    <div className="text-6xl mb-6">🔒</div>
-                    <h2 className="text-3xl font-semibold text-primary mb-4">Admin Login</h2>
-                    <p className="text-gray-600 mb-8">
-                        Bitte melden Sie sich an, um auf das Admin-Dashboard zuzugreifen.
-                    </p>
-                    <Button onClick={login} variant="primary" className="w-full">
-                        Mit Netlify Identity anmelden
-                    </Button>
+                <div className="card p-8 md:p-12 max-w-md w-full">
+                    <div className="text-center mb-6">
+                        <div className="text-6xl mb-4">🔒</div>
+                        <h2 className="text-3xl font-semibold text-primary mb-2">Admin Login</h2>
+                        <p className="text-gray-600">
+                            Bitte melden Sie sich an, um auf das Admin-Dashboard zuzugreifen.
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        {loginError && (
+                            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                                {loginError}
+                            </div>
+                        )}
+
+                        <div>
+                            <label htmlFor="username" className="block font-medium mb-2">
+                                Benutzername
+                            </label>
+                            <input
+                                type="text"
+                                id="username"
+                                value={loginUsername}
+                                onChange={(e) => setLoginUsername(e.target.value)}
+                                className="input-field"
+                                placeholder="admin"
+                                required
+                                autoFocus
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="password" className="block font-medium mb-2">
+                                Passwort
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={loginPassword}
+                                onChange={(e) => setLoginPassword(e.target.value)}
+                                className="input-field"
+                                placeholder="••••••••"
+                                required
+                            />
+                        </div>
+
+                        <Button type="submit" variant="primary" className="w-full">
+                            Anmelden
+                        </Button>
+
+                        <p className="text-sm text-gray-500 text-center mt-4">
+                            Standard: admin / admin123
+                        </p>
+                    </form>
                 </div>
             </div>
         )
@@ -149,7 +212,15 @@ const Admin = () => {
                             <h1 className="text-3xl font-bold text-primary mb-2">Admin Dashboard</h1>
                             <p className="text-gray-600">Willkommen, {user.email}</p>
                         </div>
-                        <div className="text-4xl">⚙️</div>
+                        <div className="flex items-center gap-4">
+                            <div className="text-4xl">⚙️</div>
+                            <button
+                                onClick={logout}
+                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                            >
+                                Abmelden
+                            </button>
+                        </div>
                     </div>
                 </div>
 

@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import netlifyIdentity from 'netlify-identity-widget'
 
 const AuthContext = createContext()
 
@@ -16,40 +15,30 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        // Initialize Netlify Identity
-        netlifyIdentity.init()
-
-        // Check for existing user
-        const currentUser = netlifyIdentity.currentUser()
-        setUser(currentUser)
-        setLoading(false)
-
-        // Listen for auth events
-        netlifyIdentity.on('login', (user) => {
-            setUser(user)
-            netlifyIdentity.close()
-        })
-
-        netlifyIdentity.on('logout', () => {
-            setUser(null)
-        })
-
-        return () => {
-            netlifyIdentity.off('login')
-            netlifyIdentity.off('logout')
+        // Check if user is logged in from localStorage
+        const storedUser = localStorage.getItem('admin_logged_in')
+        if (storedUser === 'true') {
+            setUser({ email: 'admin' })
         }
+        setLoading(false)
     }, [])
 
-    const login = () => {
-        netlifyIdentity.open('login')
+    const login = (username, password) => {
+        // Hardcoded credentials - in production, use environment variables
+        const ADMIN_USERNAME = import.meta.env.VITE_ADMIN_USERNAME || 'admin'
+        const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'
+
+        if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+            localStorage.setItem('admin_logged_in', 'true')
+            setUser({ email: username })
+            return true
+        }
+        return false
     }
 
     const logout = () => {
-        netlifyIdentity.logout()
-    }
-
-    const signup = () => {
-        netlifyIdentity.open('signup')
+        localStorage.removeItem('admin_logged_in')
+        setUser(null)
     }
 
     const value = {
@@ -57,7 +46,6 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
-        signup,
         isAuthenticated: !!user
     }
 
