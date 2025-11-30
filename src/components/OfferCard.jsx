@@ -5,9 +5,13 @@
 const OfferCard = ({ offer }) => {
     const { title, description, price, old_price, valid_until, image } = offer
 
+    // Ensure prices are numbers
+    const currentPrice = parseFloat(price) || 0
+    const oldPrice = old_price ? parseFloat(old_price) : null
+
     // Calculate discount percentage
-    const discountPercent = old_price
-        ? Math.round(((old_price - price) / old_price) * 100)
+    const discountPercent = oldPrice && oldPrice > 0
+        ? Math.round(((oldPrice - currentPrice) / oldPrice) * 100)
         : 0
 
     // Format date
@@ -50,11 +54,11 @@ const OfferCard = ({ offer }) => {
                 {/* Pricing */}
                 <div className="flex items-baseline gap-3 mb-3">
                     <span className="text-2xl font-bold text-primary">
-                        €{price.toFixed(2)}
+                        €{currentPrice.toFixed(2)}
                     </span>
-                    {old_price && (
+                    {oldPrice && (
                         <span className="text-lg text-gray-400 line-through">
-                            €{old_price.toFixed(2)}
+                            €{oldPrice.toFixed(2)}
                         </span>
                     )}
                 </div>
