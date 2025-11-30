@@ -306,6 +306,7 @@ const Admin = () => {
                                         <form onSubmit={handleCategorySubmit} className="space-y-4">
                                             <input
                                                 type="text"
+                                                name="category-name"
                                                 placeholder="Name"
                                                 value={formData.name || ''}
                                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -314,6 +315,7 @@ const Admin = () => {
                                             />
                                             <input
                                                 type="text"
+                                                name="category-slug"
                                                 placeholder="Slug (z.B. frisches-obst)"
                                                 value={formData.slug || ''}
                                                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
@@ -321,6 +323,7 @@ const Admin = () => {
                                                 required
                                             />
                                             <textarea
+                                                name="category-description"
                                                 placeholder="Kurzbeschreibung"
                                                 value={formData.short_description || ''}
                                                 onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
@@ -330,11 +333,20 @@ const Admin = () => {
                                             />
                                             <input
                                                 type="text"
+                                                name="category-icon"
                                                 placeholder="Icon (Emoji oder URL)"
                                                 value={formData.icon || ''}
                                                 onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
                                                 className="input-field"
                                                 required
+                                            />
+                                            <input
+                                                type="url"
+                                                name="category-image"
+                                                placeholder="Bild-URL (optional)"
+                                                value={formData.image || ''}
+                                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                                className="input-field"
                                             />
                                             <div className="flex gap-4">
                                                 <Button type="submit" variant="primary">Speichern</Button>
@@ -420,6 +432,7 @@ const Admin = () => {
                                         <form onSubmit={handleOfferSubmit} className="space-y-4">
                                             <input
                                                 type="text"
+                                                name="offer-title"
                                                 placeholder="Titel"
                                                 value={formData.title || ''}
                                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
@@ -427,6 +440,7 @@ const Admin = () => {
                                                 required
                                             />
                                             <textarea
+                                                name="offer-description"
                                                 placeholder="Beschreibung"
                                                 value={formData.description || ''}
                                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -438,6 +452,7 @@ const Admin = () => {
                                                 <input
                                                     type="number"
                                                     step="0.01"
+                                                    name="offer-price"
                                                     placeholder="Preis"
                                                     value={formData.price || ''}
                                                     onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
@@ -447,6 +462,7 @@ const Admin = () => {
                                                 <input
                                                     type="number"
                                                     step="0.01"
+                                                    name="offer-old-price"
                                                     placeholder="Alter Preis"
                                                     value={formData.old_price || ''}
                                                     onChange={(e) => setFormData({ ...formData, old_price: parseFloat(e.target.value) })}
@@ -455,12 +471,22 @@ const Admin = () => {
                                             </div>
                                             <input
                                                 type="date"
+                                                name="offer-valid-until"
                                                 value={formData.valid_until || ''}
                                                 onChange={(e) => setFormData({ ...formData, valid_until: e.target.value })}
                                                 className="input-field"
                                                 required
                                             />
+                                            <input
+                                                type="url"
+                                                name="offer-image"
+                                                placeholder="Bild-URL (optional)"
+                                                value={formData.image || ''}
+                                                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                                                className="input-field"
+                                            />
                                             <select
+                                                name="offer-category"
                                                 value={formData.category_id || ''}
                                                 onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
                                                 className="input-field"
