@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
+import { useFetchSettings } from '../hooks/useFetchSettings'
 
 /**
  * Footer Component
  * Site-wide footer with links and contact info
  */
 const Footer = () => {
+    const { settings } = useFetchSettings()
     const currentYear = new Date().getFullYear()
 
     return (
@@ -61,21 +63,20 @@ const Footer = () => {
                             <li className="flex items-start">
                                 <span className="mr-2">📍</span>
                                 <div>
-                                    <p>Am Kronenhof 17</p>
-                                    <p>73728 Esslingen</p>
-                                </div>
-                            </li>
-                            <li className="flex items-start mt-3">
-                                <span className="mr-2">📍</span>
-                                <div>
-                                    <p>Pliensaustraße 42</p>
+                                    <p>{settings.address || 'Am Kronenhof 17'}</p>
                                     <p>73728 Esslingen</p>
                                 </div>
                             </li>
                             <li className="flex items-center mt-3">
+                                <span className="mr-2">📞</span>
+                                <a href={`tel:${settings.phone}`} className="hover:text-primary-light transition-colors">
+                                    {settings.phone || '+49 711 123456'}
+                                </a>
+                            </li>
+                            <li className="flex items-center mt-3">
                                 <span className="mr-2">📧</span>
-                                <a href="mailto:info@asiansuperstore.de" className="hover:text-primary-light transition-colors">
-                                    info@asiansuperstore.de
+                                <a href={`mailto:${settings.email}`} className="hover:text-primary-light transition-colors">
+                                    {settings.email || 'info@asiansuperstore.de'}
                                 </a>
                             </li>
                         </ul>

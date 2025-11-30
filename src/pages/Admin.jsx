@@ -1,19 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useFetchCategories } from '../hooks/useFetchCategories'
 import { useFetchProducts } from '../hooks/useFetchProducts'
 import { useFetchOffers } from '../hooks/useFetchOffers'
+import { useFetchSettings } from '../hooks/useFetchSettings'
 import Button from '../components/Button'
 
 /**
  * Admin Dashboard Component
- * Manages Categories, Products, and Offers
+ * Manages Categories, Products, Offers, and Settings
  */
 const Admin = () => {
     const { user, loading: authLoading, login, logout } = useAuth()
     const { categories, refetch: refetchCategories } = useFetchCategories()
     const { products, refetch: refetchProducts } = useFetchProducts()
     const { offers, refetch: refetchOffers } = useFetchOffers()
+    const { settings, refetch: refetchSettings } = useFetchSettings()
 
     const [activeTab, setActiveTab] = useState('categories')
     const [editingItem, setEditingItem] = useState(null)
@@ -288,6 +290,15 @@ const Admin = () => {
                         >
                             Angebote ({offers.length})
                         </button>
+                        <button
+                            onClick={() => setActiveTab('settings')}
+                            className={`flex-1 py-4 px-6 font-semibold transition-colors whitespace-nowrap ${activeTab === 'settings'
+                                ? 'border-b-2 border-primary text-primary'
+                                : 'text-gray-600 hover:text-primary'
+                                }`}
+                        >
+                            Einstellungen
+                        </button>
                     </div>
 
                     {/* Tab Content */}
@@ -330,6 +341,14 @@ const Admin = () => {
                                 setEditingItem={setEditingItem}
                                 handleSubmit={handleOfferSubmit}
                                 handleDelete={handleDelete}
+                            />
+                        )}
+
+                        {/* SETTINGS TAB */}
+                        {activeTab === 'settings' && (
+                            <SettingsTab
+                                settings={settings}
+                                refetchSettings={refetchSettings}
                             />
                         )}
                     </div>
@@ -762,5 +781,125 @@ const OfferTab = ({ offers, products, formData, setFormData, editingItem, setEdi
         )}
     </div>
 )
+
+// Settings Tab Component
+const SettingsTab = ({ settings, refetchSettings }) => {
+    const [formData, setFormData] = useState({
+        opening_hours_week: settings.opening_hours_week || '',
+        opening_hours_sunday: settings.opening_hours_sunday || '',
+        phone: settings.phone || '',
+        email: settings.email || '',
+        address: settings.address || ''
+    })
+
+    // Update form data when settings load
+    useEffect(() => {
+        setFormData({
+            opening_hours_week: settings.opening_hours_week || '',
+            opening_hours_sunday: settings.opening_hours_sunday || '',
+            phone: settings.phone || '',
+            email: settings.email || '',
+            address: settings.address || ''
+        })
+    }, [settings])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            // Convert object to array of key-value pairs
+            const updates = Object.entries(formData).map(([key, value]) => ({ key, value }))
+
+            const response = await fetch('/.netlify/functions/updateSettings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updates)
+            })
+
+            if (response.ok) {
+                alert('Einstellungen erfolgreich gespeichert!')
+                refetchSettings()
+            } else {
+                const error = await response.json()
+                alert('Fehler: ' + (error.details || error.error))
+            }
+        } catch (error) {
+            console.error('Error:', error)
+            alert('Fehler bei der Kommunikation mit dem Server')
+        }
+    }
+
+    return (
+        <div className="max-w-2xl">
+            <h2 className="text-2xl font-semibold mb-6">Allgemeine Einstellungen</h2>
+            <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg border">
+                <div>
+                    <h3 className="text-lg font-medium mb-4 text-primary">Öffnungszeiten</h3>
+                    <div className="grid gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Mo - Sa</label>
+                            <input
+                                type="text"
+                                value={formData.opening_hours_week}
+                                onChange={(e) => setFormData({ ...formData, opening_hours_week: e.target.value })}
+                                className="input-field"
+                                placeholder="z.B. 09:00 - 20:00"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Sonntag</label>
+                            <input
+                                type="text"
+                                value={formData.opening_hours_sunday}
+                                onChange={(e) => setFormData({ ...formData, opening_hours_sunday: e.target.value })}
+                                className="input-field"
+                                placeholder="z.B. Geschlossen"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="border-t pt-6">
+                    <h3 className="text-lg font-medium mb-4 text-primary">Kontaktinformationen</h3>
+                    <div className="grid gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
+                            <input
+                                type="text"
+                                value={formData.phone}
+                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                className="input-field"
+                                placeholder="+49 ..."
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
+                            <input
+                                type="email"
+                                value={formData.email}
+                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                className="input-field"
+                                placeholder="info@..."
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                            <input
+                                type="text"
+                                value={formData.address}
+                                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                className="input-field"
+                                placeholder="Straße, PLZ Stadt"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="pt-4">
+                    <Button type="submit" variant="primary">Einstellungen speichern</Button>
+                </div>
+            </form>
+        </div>
+    )
+}
 
 export default Admin

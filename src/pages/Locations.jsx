@@ -1,21 +1,24 @@
 import SectionHeader from '../components/SectionHeader'
+import { useFetchSettings } from '../hooks/useFetchSettings'
 
 /**
  * Locations Page Component
  * Store locations and contact information
  */
 const Locations = () => {
+    const { settings } = useFetchSettings()
+
     const locations = [
         {
             id: 'kronenhof',
             name: 'Asian Superstore Kronenhof',
             address: 'Am Kronenhof 17',
             city: '73728 Esslingen',
-            phone: '+49 711 123456',
+            phone: settings.phone || '+49 711 123456',
             hours: {
-                weekdays: 'Mo-Fr: 9:00 - 20:00 Uhr',
+                weekdays: settings.opening_hours_week || 'Mo-Fr: 9:00 - 20:00 Uhr',
                 saturday: 'Sa: 9:00 - 18:00 Uhr',
-                sunday: 'So: Geschlossen'
+                sunday: settings.opening_hours_sunday || 'So: Geschlossen'
             }
         },
         {
@@ -23,11 +26,11 @@ const Locations = () => {
             name: 'Asian Superstore Pliensaustraße',
             address: 'Pliensaustraße 42',
             city: '73728 Esslingen',
-            phone: '+49 711 654321',
+            phone: settings.phone || '+49 711 654321',
             hours: {
-                weekdays: 'Mo-Fr: 9:00 - 20:00 Uhr',
+                weekdays: settings.opening_hours_week || 'Mo-Fr: 9:00 - 20:00 Uhr',
                 saturday: 'Sa: 9:00 - 18:00 Uhr',
-                sunday: 'So: Geschlossen'
+                sunday: settings.opening_hours_sunday || 'So: Geschlossen'
             }
         }
     ]
